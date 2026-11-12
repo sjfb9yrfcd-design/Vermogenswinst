@@ -56,7 +56,7 @@ td:first-child,th:first-child{text-align:left}
 </div>
 
 <div class="card diff" style="margin-top:14px">
-<div class="note">Verschil (PRO-voorstel t.o.v. kabinet)</div>
+<div class="note">Voordeel PRO-voorstel t.o.v. kabinet (min = duurder)</div>
 <div class="big" id="d">–</div>
 <div class="note" id="dt"></div>
 </div>
@@ -69,7 +69,7 @@ td:first-child,th:first-child{text-align:left}
 <div class="card">
 <div class="note" style="margin-bottom:8px">Het kantelpunt: tot hier is het PRO-voorstel goedkoper.</div>
 <div class="tw"><table>
-<thead><tr><th>Resultaat</th><th>Kabinet</th><th>PRO-voorstel</th><th>Verschil</th></tr></thead>
+<thead><tr><th>Resultaat</th><th>Kabinet</th><th>PRO-voorstel</th><th>Voordeel PRO</th></tr></thead>
 <tbody id="tb"></tbody></table></div>
 </div>
 
@@ -115,16 +115,16 @@ function render(){
   document.getElementById('kr').textContent=res?'Effectief '+pct(r.k/res):'';
   document.getElementById('ar').textContent=res?'Effectief '+pct(r.a/res):'';
   const d=document.getElementById('d');
-  const x=Math.round(r.d);
-  d.className='big '+(x<0?'pro':x>0?'kab':'');
+  const x=Math.round(-r.d);
+  d.className='big '+(x>0?'pro':x<0?'kab':'');
   d.textContent=(x>0?'+':x<0?'−':'')+eur(Math.abs(x));
-  document.getElementById('dt').textContent=x<0?'Het PRO-voorstel is voordeliger':x>0?'Het kabinetsvoorstel is voordeliger':'Geen verschil';
+  document.getElementById('dt').textContent=x>0?'Het PRO-voorstel is voordeliger':x<0?'Het kabinetsvoorstel is voordeliger':'Geen verschil';
   const be=VRIJ*n+SCH*n+(0.005*SCH*n)/0.025;
   drawChart(n,res,be);
   const rows=[10000,25000,50000,be,100000,250000,500000].sort((p,q)=>p-q);
   document.getElementById('tb').innerHTML=rows.map(v=>{
-    const c=calc(v,n),dd=Math.round(c.d);
-    const cls=dd<0?'pro':dd>0?'kab':'';
+    const c=calc(v,n),dd=Math.round(-c.d);
+    const cls=dd>0?'pro':dd<0?'kab':'';
     const lab=v===be?eur(v)+' (kantelpunt)':eur(v);
     return `<tr><td>${lab}</td><td>${eur(c.k)}</td><td>${eur(c.a)}</td><td class="${cls}">${dd>0?'+':dd<0?'−':''}${eur(Math.abs(dd))}</td></tr>`;
   }).join('');
